@@ -4,7 +4,7 @@ import { FlatList, List, ListItem, Text } from 'react-native';
 export default class ShoppingListList extends Component {
 	constructor(props) {
 	  super(props);
-	  this.state = {lists: [{name: 'List 1', items: []}, {name: 'List 2', items: []}]};
+	  this.state = {lists: [{id: '1', name: 'List 1', items: []}, {id: '2', name: 'List 2', items: []}]};
 	}
   
 	render() {
@@ -13,7 +13,7 @@ export default class ShoppingListList extends Component {
 			<FlatList
 				data={this.state.lists}
 				renderItem={({item}) => <Text>{item.name}</Text>}
-				
+				keyExtractor={item => item.id}
 			>
 			</FlatList>
 	  );

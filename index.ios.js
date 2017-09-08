@@ -18,7 +18,7 @@ import {
 
 const remoteDbUrl = "http://admin:pass@9.24.7.248:35984/testdb";
 
-export default class HelloReactNative extends Component {
+export default class ShoppingListApp extends Component {
   constructor(props) {
     super(props);
     this.docs = [];
@@ -60,7 +60,7 @@ export default class HelloReactNative extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Shopping List Coming Soon...
+          Shopping List
         </Text>
         <ShoppingListList />
       </View>
@@ -70,6 +70,7 @@ export default class HelloReactNative extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 10,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -87,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('ShoppingList', () => HelloReactNative);
+AppRegistry.registerComponent('ShoppingList', () => ShoppingListApp);
