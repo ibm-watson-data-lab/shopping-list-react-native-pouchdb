@@ -1,21 +1,30 @@
 import React, { Component } from 'react';
-import { FlatList, List, ListItem, Text } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
+import ShoppingList from './shopping_list';
 
 export default class ShoppingListList extends Component {
-	constructor(props) {
-	  super(props);
-	  this.state = {lists: [{id: '1', name: 'List 1', items: []}, {id: '2', name: 'List 2', items: []}]};
+	
+	renderFlatListItem(item) {
+		return (
+			<ShoppingList list={item} onListPressed={this.props.onListPressed}/>
+		);
 	}
   
 	render() {
-	  return (
-			
-			<FlatList
-				data={this.state.lists}
-				renderItem={({item}) => <Text>{item.name}</Text>}
-				keyExtractor={item => item.id}
+		return (
+			<FlatList style={styles.container}
+				data={this.props.docs}
+				renderItem={({item}) => this.renderFlatListItem(item)}
+				keyExtractor={item => item._id}
 			>
 			</FlatList>
 	  );
 	}
 }
+
+const styles = StyleSheet.create({
+	container: {
+	  flex: 1,
+	  backgroundColor: '#FF00FF'
+	}
+  });
