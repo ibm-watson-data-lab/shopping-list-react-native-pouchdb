@@ -1,41 +1,47 @@
 import React, { Component } from 'react';
 import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { connect } from 'react-redux';
 import ShoppingListItem from './shopping_list_item';
 import ShoppingListItemAdd from './shopping_list_item_add';
 
-export default class ShoppingListManage extends Component {
+class ShoppingListManage extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {list: props.list};
-  }
-
-  componentWillReceiveProps(props) {
-    this.setState({list: props.list});
-  }
+   }
 
   renderFlatListItem(item) {
     return (
-      <ShoppingListItem item={item} onItemCheckChanged={this.props.onItemCheckChanged} onItemDeleted={this.props.onItemDeleted}/>
+      <ShoppingListItem item={item} list={this.props.list} pouchdb={this.props.pouchdb} />
     );
   }
   
   render() {
     return (
       <View style={styles.container}>
-        <Text>{this.state.list.name}</Text>
+        <Text>{this.props.list.name}</Text>
         <FlatList
-          data={this.state.list.items}
+          data={this.props.list.items}
           renderItem={({ item }) => this.renderFlatListItem(item)}
           keyExtractor={item => item._id}
-          extraData={this.state}
+          extraData={this.props.list._rev}
         >
         </FlatList>
-        <ShoppingListItemAdd onItemTextChanged={this.props.onItemTextChanged} onItemAdded={this.props.onItemAdded} />
+        <ShoppingListItemAdd list={this.props.list} pouchdb={this.props.pouchdb} onItemTextChanged={this.props.onItemTextChanged} onItemAdded={this.props.onItemAdded} />
       </View>
     );
   }
 }
+
+function mapStateToProps(state) {
+	return {
+    itemAdded: state.itemAdded,
+    itemUpdated: state.itemUpdated,
+    itemDeleted: state.itemDeleted
+	};
+}
+
+export default connect(mapStateToProps)(ShoppingListManage);
 
 const styles = StyleSheet.create({
   container: {

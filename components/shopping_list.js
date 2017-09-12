@@ -3,27 +3,12 @@ import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 
 export default class ShoppingList extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {list: props.list};
-  }
-
-  componentWillReceiveProps(props) {
-    this.setState({list: props.list});
-  }
-
-  renderFlatListItem(item) {
-    return (
-      <ShoppingListItem item={item} onItemCheckChanged={this.props.onItemCheckChanged} onItemDeleted={this.props.onItemDeleted}/>
-    );
-  }
-  
   render() {
-    let len = this.state.list.items ? this.state.list.items.length : 0;
+    let len = this.props.list.items ? this.props.list.items.length : 0;
     return (
-      <TouchableHighlight underlayColor='transparent' style={styles.container} onPress={() => this.props.onListPressed(this.state.list)}>
+      <TouchableHighlight underlayColor='transparent' style={styles.container} onPress={() => this.props.onListPressed(this.props.list)}>
         <View>
-          <Text>{this.state.list.name}</Text>
+          <Text>{this.props.list.name}</Text>
           <Text>{`${len} item(s)`}</Text>
         </View>
       </TouchableHighlight>

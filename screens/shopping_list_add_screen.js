@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Button, StyleSheet, TextInput, View } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { addList } from '../actions/index';
 
-export default class ShoppingListAddScreen extends Component {
+class ShoppingListAddScreen extends Component {
 
   static navigationOptions = ({ navigation, screenProps }) => ({
     title: "New Shopping List",
@@ -17,18 +20,13 @@ export default class ShoppingListAddScreen extends Component {
   }
 
   save(navigation) {
-    navigation.state.params.pouchdb.post({
-      type: 'list',
-      name: navigation.state.params.text,
-    }).then((response) => {
-      navigation.goBack();
-    }).catch((err) => {
-      console.log(err);
-    });
+    this.props.addList(navigation.state.params.text, navigation.state.params.pouchdb);
+    // mw:TODO - this should probably happen after the save is successful
+    navigation.goBack();
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({ save: this.save, text: '' });
+    this.props.navigation.setParams({ save: (navigation) => this.save(navigation), text: '' });
   }
 
   render() {
@@ -53,3 +51,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2
   }
 });
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    addList: addList
+  }, dispatch);
+}
+
+function mapStateToProps(state) {
+	return {
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShoppingListAddScreen);
