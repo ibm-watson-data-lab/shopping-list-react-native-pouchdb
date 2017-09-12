@@ -41,6 +41,7 @@ export default class ShoppingListListScreen extends Component {
         // handle error
       }
       else {
+        console.log("LOAD DOCS");
         docs = [];
         for (let row of body.rows) {
           docs.push(row.doc);
@@ -50,16 +51,26 @@ export default class ShoppingListListScreen extends Component {
     });
   }
 
-  onListPressed(list) {
-    console.log('dsadsadsadsads');
-    console.log(this);
-    this.props.navigation.navigate('ShoppingListItemAdd', { list: list, pouchdb: this.db })
+  handleItemCheckChanged(list, cb) {
+    this.db.put(list)
+      .then(function (response) {
+        list._rev = response.rev
+        cb();
+      }).catch(function (err) {
+        // mw:TODO
+        console.log(err);
+        cb(err);
+      });
+  }
+
+  handleListPressed(list) {
+    this.props.navigation.navigate('ShoppingList', { list: list, pouchdb: this.db })
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <ShoppingListList docs={this.state.docs} onListPressed={(list) => this.onListPressed(list)} />
+        <ShoppingListList docs={this.state.docs} onListPressed={(list) => this.handleListPressed(list)} onItemCheckChanged={(list, item, callback) => this.handleItemCheckChanged(list, item, callback)} />
       </View>
     );
   }

@@ -13,16 +13,21 @@ export default class ShoppingListItemAddScreen extends Component {
   }
 
   save(navigation) {
-    let shopping_list = navigation.state.params.list;
-    if (!shopping_list.items) {
-      shopping_list.items = [];
+    let pouchdb = navigation.state.params.pouchdb;
+    let list = navigation.state.params.list;
+    let text = navigation.state.params.text;
+    if (!list.items) {
+      list.items = [];
     }
-    shopping_list.items.push({
-      _id: `item${shopping_list.items.length}`,
-      name: navigation.state.params.text
+    list.items.push({
+      _id: `item${list.items.length}`,
+      name: text,
+      checked: false
     });
-    navigation.state.params.pouchdb.put(shopping_list)
+    pouchdb.put(list)
       .then(function (response) {
+        list._rev = response.rev;
+        navigation.state.params.onItemAdded();
         navigation.goBack();
       }).catch(function (err) {
         console.log(err);

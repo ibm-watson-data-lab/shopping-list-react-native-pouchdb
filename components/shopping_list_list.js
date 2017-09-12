@@ -4,9 +4,12 @@ import ShoppingList from './shopping_list';
 
 export default class ShoppingListList extends Component {
 
-  renderFlatListItem(item) {
+  renderFlatListItem(list) {
     return (
-      <ShoppingList list={item} onListPressed={this.props.onListPressed} />
+      <ShoppingList
+        list={list}
+        onListPressed={this.props.onListPressed}
+        onItemCheckChanged={(item, checked, callback) => this.props.onItemCheckChanged(list, checked, callback)}/>
     );
   }
 

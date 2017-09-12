@@ -6,17 +6,13 @@ export default class ShoppingList extends Component {
 
   renderFlatListItem(item) {
     return (
-      <ShoppingListItem item={item} />
+      <ShoppingListItem item={item} onItemCheckChanged={this.props.onItemCheckChanged}/>
     );
-  }
-
-  onPress() {
-    this.props.onListPressed(this.props.list);
   }
 
   render() {
     return (
-      <TouchableHighlight style={styles.container} onPress={() => this.onPress()}>
+      <TouchableHighlight style={styles.container} onPress={() => this.props.onListPressed(this.props.list)}>
         <View>
           <Text>{this.props.list.name}</Text>
           <FlatList
@@ -38,8 +34,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#0000CC'
   }
 });
