@@ -75,7 +75,7 @@ export default class ShoppingListListScreen extends Component {
   render() {
     return (
       <View style={{flex: 1}}>
-        <ShoppingListList docs={this.state.docs} onListPressed={(list) => this.handleListPressed(list)} />
+        <ShoppingListList docs={this.state.docs} pouchdb={this.db} onListPressed={(list) => this.handleListPressed(list)} />
       </View>
     );
   }

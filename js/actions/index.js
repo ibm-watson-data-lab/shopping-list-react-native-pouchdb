@@ -1,6 +1,7 @@
 export const ADD_LIST = 'ADD_LIST';
 export const ADD_ITEM = 'ADD_ITEM';
 export const DELETE_ITEM = 'DELETE_ITEM';
+export const DELETE_LIST = 'DELETE_LIST';
 export const UPDATE_ITEM_CHECKED = 'UPDATE_ITEM_CHECKED';
 export const UPDATE_NEW_ITEM_TEXT = 'UPDATE_NEW_ITEM_TEXT';
 
@@ -15,6 +16,21 @@ export function addList(text, pouchdb) {
         dispatch({
           type: ADD_LIST,
           payload: list
+        });
+      }).catch((err) => {
+        // mw:TODO
+        console.log(err);
+      });
+  };
+}
+
+export function deleteList(list, pouchdb) {
+  return dispatch => {
+    pouchdb.remove(list)
+      .then((response) => {
+        dispatch({
+          type: DELETE_LIST,
+          payload: list._id
         });
       }).catch((err) => {
         // mw:TODO

@@ -6,17 +6,13 @@ export default class ShoppingListList extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {docs: props.docs};
-  }
-
-  componentWillReceiveProps(props) {
-    this.setState({docs: props.docs});  
   }
 
   renderFlatListItem(list) {
     return (
       <ShoppingList
         list={list}
+        pouchdb={this.props.pouchdb}
         onListPressed={this.props.onListPressed}
       />
     );
@@ -26,7 +22,7 @@ export default class ShoppingListList extends Component {
     return (
       <View style={{flex: 1}}>
         <FlatList style={{flex: 1}}
-          data={this.state.docs}
+          data={this.props.docs}
           renderItem={({ item }) => this.renderFlatListItem(item)}
           keyExtractor={item => item._id}
         >
