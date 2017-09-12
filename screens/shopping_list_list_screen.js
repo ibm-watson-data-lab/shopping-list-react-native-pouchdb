@@ -11,7 +11,11 @@ export default class ShoppingListListScreen extends Component {
 
   static navigationOptions = ({ navigation, screenProps }) => ({
     title: "Shopping Lists",
-    headerRight: <Button title="+" onPress={() => navigation.navigate('ShoppingListAdd', { pouchdb: navigation.state.params.pouchdb })} />
+    headerRight: <Button title='+' color='#FFFFFF' onPress={() => navigation.navigate('ShoppingListAdd', { pouchdb: navigation.state.params.pouchdb })} />,
+    headerTintColor: '#FFFFFF',
+    headerStyle: {
+      backgroundColor: '#4A90E2'
+    }
   });
 
   constructor(props) {
@@ -83,16 +87,9 @@ export default class ShoppingListListScreen extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={{flex: 1}}>
         <ShoppingListList docs={this.state.docs} onListPressed={(list) => this.handleListPressed(list)} onItemCheckChanged={(list, item, callback) => this.handleItemCheckChanged(list, item, callback)} />
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FF0000'
-  }
-});

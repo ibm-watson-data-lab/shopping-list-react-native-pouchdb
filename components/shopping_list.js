@@ -18,7 +18,6 @@ export default class ShoppingList extends Component {
       <ShoppingListItem item={item} onItemCheckChanged={this.props.onItemCheckChanged} onItemDeleted={this.props.onItemDeleted}/>
     );
   }
-
   
   render() {
     let child = (
@@ -34,7 +33,7 @@ export default class ShoppingList extends Component {
     );
     if (this.props.onListPressed) {
       return (
-        <TouchableHighlight style={styles.container} onPress={() => this.props.onListPressed(this.state.list)}>
+        <TouchableHighlight underlayColor='transparent' style={styles.container} onPress={() => this.props.onListPressed(this.state.list)}>
           {child}
         </TouchableHighlight>
       );
@@ -51,11 +50,13 @@ export default class ShoppingList extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     marginTop: 10,
     marginLeft: 10,
     marginRight: 10,
     padding: 10,
-    backgroundColor: '#0000CC'
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
   }
 });

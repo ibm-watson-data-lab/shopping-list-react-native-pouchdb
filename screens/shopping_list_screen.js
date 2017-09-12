@@ -6,7 +6,11 @@ export default class ShoppingListScreen extends Component {
 
   static navigationOptions = ({ navigation, screenProps }) => ({
     title: navigation.state.params.list.name,
-    headerRight: <Button title="+" onPress={() => navigation.navigate('ShoppingListItemAdd', { list: navigation.state.params.list, pouchdb: navigation.state.params.pouchdb, onItemAdded: navigation.state.params.onItemAdded })} />
+    headerRight: <Button title='+' color='#FFFFFF' onPress={() => navigation.navigate('ShoppingListItemAdd', { list: navigation.state.params.list, pouchdb: navigation.state.params.pouchdb, onItemAdded: navigation.state.params.onItemAdded })} />,
+    headerTintColor: '#FFFFFF',
+    headerStyle: {
+      backgroundColor: '#4A90E2'
+    }
   });
 
   constructor(props) {

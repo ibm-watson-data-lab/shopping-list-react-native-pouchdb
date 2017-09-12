@@ -5,7 +5,11 @@ export default class ShoppingListAddScreen extends Component {
 
   static navigationOptions = ({ navigation, screenProps }) => ({
     title: "New Shopping List",
-    headerRight: <Button title="Save" onPress={() => navigation.state.params.save(navigation)} />
+    headerRight: <Button title='Save' color='#FFFFFF' onPress={() => navigation.state.params.save(navigation)} />,
+    headerTintColor: '#FFFFFF',
+    headerStyle: {
+      backgroundColor: '#4A90E2'
+    }
   });
 
   constructor(props) {
@@ -41,7 +45,10 @@ const styles = StyleSheet.create({
   container: {
     margin: 10,
     height: 40,
-    borderColor: 'gray',
-    borderWidth: 1
+    padding: 10,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2
   }
 });

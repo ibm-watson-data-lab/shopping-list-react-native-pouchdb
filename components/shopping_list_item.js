@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Text, View } from 'react-native';
+import CheckBox from 'react-native-check-box'
 import Swipeout from 'react-native-swipeout';
 
 export default class ShoppingListItem extends Component {
@@ -13,8 +14,8 @@ export default class ShoppingListItem extends Component {
     this.setState({item: props.item});  
   }
   
-  save(checked) {
-    this.state.item.checked = checked;
+  save() {
+    this.state.item.checked = ! this.state.item.checked;
     this.props.onItemCheckChanged(this.state.item, (err) => {
       if (err) {
         this.state.item.checked = ! checked;
@@ -33,10 +34,18 @@ export default class ShoppingListItem extends Component {
   }
 
   render() {
+    let textDecorationLine = this.state.item.checked ? 'line-through': 'none';
+    let textColor = this.state.item.checked ? '#9E9E9E': '#000000';
     let child = (
       <View style={{flexDirection: 'row', padding: 10}}>
-        <Switch value={this.state.item.checked} onValueChange={(checked) => this.save(checked)} />
-        <Text style={{padding: 10}}>{this.state.item.name}</Text>
+        <CheckBox
+          style={{flex: 1}}
+          checkBoxColor='#4A90E2'
+          onClick={()=>this.save()}
+          isChecked={this.state.item.checked}
+          rightText={this.state.item.name}
+          rightTextStyle={{textDecorationLine: textDecorationLine, color: textColor}}
+        />
       </View>
     );
     if (this.props.onItemDeleted) {
