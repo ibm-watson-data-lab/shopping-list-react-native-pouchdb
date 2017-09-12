@@ -1,29 +1,23 @@
 import React, { Component } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import CheckBox from 'react-native-check-box'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { addItem, updateNewItemText } from '../actions/index';
 
-export default class ShoppingListItemAdd extends Component {
+class ShoppingListItemAdd extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {text: ''};
   }
 
   save() {
-    this.props.onItemAdded(this.state.text, (err) => {
-      if (! err) {
-        this.setState({text: ''});
-      }
-    });
+    this.props.addItem(this.props.text, this.props.list, this.props.pouchdb);
+    this.props.updateNewItemText('');
   }
 
   handleCheckBoxClick() {
-    // do nothing
-  }
-
-  handleChangeText(text) {
-    this.props.onItemTextChanged(text);
-    this.setState({ text: text });
+    // do nothing - onClick is required
   }
 
   render() {
@@ -37,9 +31,9 @@ export default class ShoppingListItemAdd extends Component {
         />
         <TextInput
           style={styles.textInput}
-          onChangeText={(text) => this.handleChangeText(text)}
+          onChangeText={(text) => this.props.updateNewItemText(text)}
           onSubmitEditing={() => this.save()}
-          value={this.state.text}
+          value={this.props.text}
         />
       </View>
     );
@@ -56,3 +50,18 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   }
 });
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    updateNewItemText: updateNewItemText,
+    addItem: addItem 
+  }, dispatch);
+}
+
+function mapStateToProps(state) {
+	return {
+		text: state.newItemText
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShoppingListItemAdd);

@@ -18,7 +18,7 @@ export default class ShoppingListList extends Component {
       <ShoppingList
         list={list}
         onListPressed={this.props.onListPressed}
-        onItemCheckChanged={(item, checked, callback) => this.props.onItemCheckChanged(list, checked, callback)}/>
+      />
     );
   }
 
@@ -31,7 +31,6 @@ export default class ShoppingListList extends Component {
           keyExtractor={item => item._id}
         >
         </FlatList>
-        {/* <TextInput /> */}
       </View>
     );
   }

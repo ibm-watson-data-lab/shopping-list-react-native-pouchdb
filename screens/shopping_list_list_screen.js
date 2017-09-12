@@ -4,8 +4,8 @@ import PouchDBAsyncStorageAdapter from 'pouchdb-adapter-asyncstorage';
 import ShoppingListList from '../components/shopping_list_list';
 import { Button, StyleSheet, View } from 'react-native';
 
-// const remoteDbUrl = "http://admin:pass@9.24.7.248:35984/testdb";
-const remoteDbUrl = "http://admin:pass@192.168.1.70:35984/testdb";
+const remoteDbUrl = "http://admin:pass@9.24.7.248:35984/testdb";
+//const remoteDbUrl = "http://admin:pass@192.168.1.70:35984/testdb";
 
 export default class ShoppingListListScreen extends Component {
 
@@ -68,19 +68,6 @@ export default class ShoppingListListScreen extends Component {
     });
   }
 
-  handleItemCheckChanged(list, cb) {
-    this.db.put(list)
-      .then((response) => {
-        list._rev = response.rev;
-        this.loadDocs();
-        cb();
-      }).catch((err) => {
-        // mw:TODO
-        console.log(err);
-        cb(err);
-      });
-  }
-
   handleListPressed(list) {
     this.props.navigation.navigate('ShoppingList', { list: list, pouchdb: this.db })
   }
@@ -88,7 +75,7 @@ export default class ShoppingListListScreen extends Component {
   render() {
     return (
       <View style={{flex: 1}}>
-        <ShoppingListList docs={this.state.docs} onListPressed={(list) => this.handleListPressed(list)} onItemCheckChanged={(list, item, callback) => this.handleItemCheckChanged(list, item, callback)} />
+        <ShoppingListList docs={this.state.docs} onListPressed={(list) => this.handleListPressed(list)} />
       </View>
     );
   }
