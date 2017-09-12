@@ -4,7 +4,8 @@ import PouchDBAsyncStorageAdapter from 'pouchdb-adapter-asyncstorage';
 import ShoppingListList from '../components/shopping_list_list';
 import { Button, StyleSheet, View } from 'react-native';
 
-const remoteDbUrl = "http://admin:pass@9.24.7.248:35984/testdb";
+// const remoteDbUrl = "http://admin:pass@9.24.7.248:35984/testdb";
+const remoteDbUrl = "http://admin:pass@192.168.1.70:35984/testdb";
 
 export default class ShoppingListListScreen extends Component {
 
@@ -16,7 +17,7 @@ export default class ShoppingListListScreen extends Component {
   constructor(props) {
     super(props);
     this.docs = [];
-    this.state = {};
+    this.state = {docs: []};
     PouchDB.plugin(PouchDBAsyncStorageAdapter);
     this.db = new PouchDB('testdb', { adapter: 'asyncstorage' });
     this.remoteDb = new PouchDB(remoteDbUrl);
@@ -25,10 +26,23 @@ export default class ShoppingListListScreen extends Component {
       live: true,
       retry: true
     }).on('change', (change) => {
+      // console.log("CHANGER!");
       this.loadDocs();
     }).on('error', (err) => {
       console.log(err);
     });
+    this.db.changes({
+      since: 0,
+      live: true
+    }).on('change', (change) => {
+      console.log("CHANGER!");
+      this.loadDocs();
+    }).on('error', (err) => {
+      console.log(err);
+    }).catch((err) => {
+      // handle errors
+    });
+    
   }
 
   componentDidMount() {
@@ -41,7 +55,6 @@ export default class ShoppingListListScreen extends Component {
         // handle error
       }
       else {
-        console.log("LOAD DOCS");
         docs = [];
         for (let row of body.rows) {
           docs.push(row.doc);
@@ -53,10 +66,11 @@ export default class ShoppingListListScreen extends Component {
 
   handleItemCheckChanged(list, cb) {
     this.db.put(list)
-      .then(function (response) {
-        list._rev = response.rev
+      .then((response) => {
+        list._rev = response.rev;
+        this.loadDocs();
         cb();
-      }).catch(function (err) {
+      }).catch((err) => {
         // mw:TODO
         console.log(err);
         cb(err);

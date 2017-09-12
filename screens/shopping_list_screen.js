@@ -11,14 +11,15 @@ export default class ShoppingListScreen extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {list: this.props.navigation.state.params.list};
   }
 
   handleItemAdded() {
-    console.log("handleItemADDEDDDEDEDEDEDE");
-    this.setState({});
+    this.setState({list: this.props.navigation.state.params.list});
   }
 
   componentDidMount() {
+    this.setState({list: this.props.navigation.state.params.list});
     this.props.navigation.setParams({ onItemAdded: () => this.handleItemAdded() })
   }
 
@@ -28,6 +29,7 @@ export default class ShoppingListScreen extends Component {
     pouchdb.put(list)
       .then((response) => {
         list._rev = response.rev
+        this.setState({list: list});
         cb();
       }).catch((err) => {
         // mw:TODO
@@ -36,17 +38,31 @@ export default class ShoppingListScreen extends Component {
       });
   }
 
-  handleListPressed() {
-
+  handleItemDeleted(item, cb) {
+    let pouchdb = this.props.navigation.state.params.pouchdb;
+    let list = this.props.navigation.state.params.list;
+    var index = list.items.indexOf(item);
+    if (index > -1) {
+      list.items.splice(index, 1);
+    }
+    pouchdb.put(list)
+      .then((response) => {
+        list._rev = response.rev
+        this.setState({list: list});
+        cb();
+      }).catch((err) => {
+        // mw:TODO
+        console.log(err);
+        cb(err);
+      });
   }
 
   render() {
-    console.log(this.props.navigation.state.params.list);
     return (
       <ShoppingList
-        list={this.props.navigation.state.params.list}
-        onListPressed={this.handleListPressed}
-        onItemCheckChanged={(item, checked, callback) => this.handleItemCheckChanged(item, checked, callback)}
+        list={this.state.list}
+        onItemCheckChanged={(item, callback) => this.handleItemCheckChanged(item, callback)}
+        onItemDeleted={(item, callback) => this.handleItemDeleted(item, callback)}
       />
     );
   }

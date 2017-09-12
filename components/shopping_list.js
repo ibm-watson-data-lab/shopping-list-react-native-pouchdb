@@ -4,26 +4,48 @@ import ShoppingListItem from './shopping_list_item';
 
 export default class ShoppingList extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {list: props.list};
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({list: props.list});
+  }
+
   renderFlatListItem(item) {
     return (
-      <ShoppingListItem item={item} onItemCheckChanged={this.props.onItemCheckChanged}/>
+      <ShoppingListItem item={item} onItemCheckChanged={this.props.onItemCheckChanged} onItemDeleted={this.props.onItemDeleted}/>
     );
   }
 
+  
   render() {
-    return (
-      <TouchableHighlight style={styles.container} onPress={() => this.props.onListPressed(this.props.list)}>
-        <View>
-          <Text>{this.props.list.name}</Text>
-          <FlatList
-            data={this.props.list.items}
-            renderItem={({ item }) => this.renderFlatListItem(item)}
-            keyExtractor={item => item._id}
-          >
-          </FlatList>
-        </View>
-      </TouchableHighlight>
+    let child = (
+      <View>
+        <Text>{this.state.list.name}</Text>
+        <FlatList
+          data={this.state.list.items}
+          renderItem={({ item }) => this.renderFlatListItem(item)}
+          keyExtractor={item => item._id}
+        >
+        </FlatList>
+      </View>
     );
+    if (this.props.onListPressed) {
+      return (
+        <TouchableHighlight style={styles.container} onPress={() => this.props.onListPressed(this.state.list)}>
+          {child}
+        </TouchableHighlight>
+      );
+    }
+    else {
+      return (
+        <View style={styles.container}>
+          {child}
+        </View>
+      );
+    }
   }
 }
 
