@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import ShoppingListItem from './shopping_list_item';
+import ShoppingListItemAdd from './shopping_list_item_add';
 
-export default class ShoppingList extends Component {
+export default class ShoppingListManage extends Component {
 
   constructor(props) {
     super(props);
@@ -19,14 +21,18 @@ export default class ShoppingList extends Component {
   }
   
   render() {
-    let len = this.state.list.items ? this.state.list.items.length : 0;
     return (
-      <TouchableHighlight underlayColor='transparent' style={styles.container} onPress={() => this.props.onListPressed(this.state.list)}>
-        <View>
-          <Text>{this.state.list.name}</Text>
-          <Text>{`${len} item(s)`}</Text>
-        </View>
-      </TouchableHighlight>
+      <View style={styles.container}>
+        <Text>{this.state.list.name}</Text>
+        <FlatList
+          data={this.state.list.items}
+          renderItem={({ item }) => this.renderFlatListItem(item)}
+          keyExtractor={item => item._id}
+          extraData={this.state}
+        >
+        </FlatList>
+        <ShoppingListItemAdd onItemTextChanged={this.props.onItemTextChanged} onItemAdded={this.props.onItemAdded} />
+      </View>
     );
   }
 }

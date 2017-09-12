@@ -20,9 +20,9 @@ export default class ShoppingListAddScreen extends Component {
     navigation.state.params.pouchdb.post({
       type: 'list',
       name: navigation.state.params.text,
-    }).then(function (response) {
+    }).then((response) => {
       navigation.goBack();
-    }).catch(function (err) {
+    }).catch((err) => {
       console.log(err);
     });
   }
@@ -33,7 +33,8 @@ export default class ShoppingListAddScreen extends Component {
 
   render() {
     return (
-      <TextInput style={styles.container}
+      <TextInput
+        style={styles.container}
         onChangeText={(text) => this.props.navigation.setParams({ text: text })}
         value={this.props.navigation.state.params.text}
       />

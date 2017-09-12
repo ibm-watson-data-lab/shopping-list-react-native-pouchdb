@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Switch, Text, View } from 'react-native';
+import { View } from 'react-native';
 import CheckBox from 'react-native-check-box'
 import Swipeout from 'react-native-swipeout';
 
