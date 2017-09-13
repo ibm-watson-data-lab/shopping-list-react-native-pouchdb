@@ -89,8 +89,13 @@ export function addItem(text, list) {
   }
   let item = {
     _id: uuid.v4(),
-    name: text,
-    checked: false
+    type: 'item',
+    version: 1,
+    list: list._id,
+    title: text,
+    checked: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   };
   list.items.push(item);
   list.updatedAt = new Date().toISOString();

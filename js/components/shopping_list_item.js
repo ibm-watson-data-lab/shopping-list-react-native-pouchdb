@@ -40,7 +40,7 @@ class ShoppingListItem extends Component {
             checkBoxColor='#4A90E2'
             onClick={()=>this.update()}
             isChecked={this.props.item.checked}
-            rightText={this.props.item.name}
+            rightText={this.props.item.title}
             rightTextStyle={{textDecorationLine: textDecorationLine, color: textColor}}
           />
         </View>
