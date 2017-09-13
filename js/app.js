@@ -28,16 +28,19 @@ export default class ShoppingListApp extends Component  {
         fields: ['type', 'list']
       }
     }).then(function (result) {
+      // load all lists
+      store.dispatch(loadLists());
+      // configure replication
       db.sync(remoteDb, {
         live: true,
         retry: true
       }).on('change', (change) => {
-        store.dispatch(loadLists());
+        // will be handled by subscribing to changes below
       }).on('error', (err) => {
         console.log(err);
       });
       db.changes({
-        since: 0,
+        since: 'now',
         live: true
       }).on('change', (change) => {
         store.dispatch(loadLists());
