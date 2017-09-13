@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { addList } from '../actions/index';
@@ -8,10 +8,15 @@ class ShoppingListAddScreen extends Component {
 
   static navigationOptions = ({ navigation, screenProps }) => ({
     title: "New Shopping List",
-    headerRight: <Button title='Save' color='#FFFFFF' onPress={() => navigation.state.params.save(navigation)} />,
+    headerRight: (
+      <TouchableHighlight underlayColor='transparent' onPress={() => navigation.state.params.save(navigation)}>
+        <Text style={{ fontSize: 17, color: '#FFFFFF' }}>Save</Text>
+      </TouchableHighlight>
+    ),
     headerTintColor: '#FFFFFF',
     headerStyle: {
-      backgroundColor: '#4A90E2'
+      backgroundColor: '#4A90E2',
+      paddingRight: 10
     }
   });
 

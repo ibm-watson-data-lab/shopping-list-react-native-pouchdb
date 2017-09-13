@@ -26,7 +26,7 @@ class ShoppingListManage extends Component {
     const list = this.props.currentList ? this.props.currentList : this.props.list;
     return (
       <View style={styles.container}>
-        <Text>{list.name}</Text>
+        <Text>{list.title}</Text>
         <FlatList
           data={list.items}
           renderItem={({ item }) => this.renderFlatListItem(item, list)}

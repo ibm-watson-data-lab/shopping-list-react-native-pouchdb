@@ -10,6 +10,7 @@ import ShoppingListListScreen from './screens/shopping_list_list_screen';
 import ShoppingListScreen from './screens/shopping_list_screen';
 import { db, remoteDb } from './db'
 import { loadLists } from './actions/index'
+import { ShoppingListFactory, ShoppingListRepositoryPouchDB } from 'ibm-shopping-list-model'
 
 const store = createStore(reducers, applyMiddleware(thunk));
 
@@ -22,7 +23,6 @@ const ShoppingListNavigator = StackNavigator({
 export default class ShoppingListApp extends Component  {
   constructor(props) {
     super(props);
-    console.log(db);
     db.sync(remoteDb, {
       live: true,
       retry: true

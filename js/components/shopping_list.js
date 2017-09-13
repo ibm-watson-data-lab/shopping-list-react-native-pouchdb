@@ -27,7 +27,7 @@ class ShoppingList extends Component {
       >
         <TouchableHighlight underlayColor='transparent' style={styles.container} onPress={() => this.props.onListPressed(this.props.list)}>
           <View>
-            <Text>{this.props.list.name}</Text>
+            <Text>{this.props.list.title}</Text>
             <Text>{`${len} item(s)`}</Text>
           </View>
         </TouchableHighlight>

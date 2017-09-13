@@ -1,3 +1,4 @@
+import uuid from 'react-native-uuid';
 import { db } from '../db'
 
 export const ADD_LIST = 'ADD_LIST';
@@ -39,11 +40,16 @@ export function setCurrentList(list) {
 export function addList(text) {
   let list = {
     type: 'list',
-    name: text,
+    version: 1,
+    title: text,
+    checked: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   }
   return dispatch => {
     db.post(list)
       .then((response) => {
+        list._rev = response.rev;
         dispatch({
           type: ADD_LIST,
           payload: list
@@ -82,11 +88,12 @@ export function addItem(text, list) {
     list.items = [];
   }
   let item = {
-    _id: `item${list.items.length}`,
+    _id: uuid.v4(),
     name: text,
     checked: false
   };
   list.items.push(item);
+  list.updatedAt = new Date().toISOString();
   return dispatch => {
     db.put(list)
       .then((response) => {
@@ -104,6 +111,7 @@ export function addItem(text, list) {
 
 export function updateItemChecked(item, list) {
   item.checked = ! item.checked;
+  list.updatedAt = new Date().toISOString();
   return dispatch => {
     db.put(list)
       .then((response) => {
@@ -127,6 +135,7 @@ export function deleteItem(item, list) {
   if (index > -1) {
     list.items.splice(index, 1);
   }
+  list.updatedAt = new Date().toISOString();
   return dispatch => {
     db.put(list)
       .then((response) => {

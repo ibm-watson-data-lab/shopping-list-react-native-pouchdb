@@ -10,6 +10,8 @@ export default function(state = null, action) {
 				if (state) {
 					for (let list of action.payload) {
 						if (list._id == state._id) {
+							console.log('LIST HERE!');
+							console.log(list);
 							state = list;
 							break;
 						}

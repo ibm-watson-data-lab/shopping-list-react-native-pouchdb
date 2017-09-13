@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
 import ShoppingListList from '../components/shopping_list_list';
-import { Button, StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import { connect } from 'react-redux';
 
 class ShoppingListListScreen extends Component {
 
   static navigationOptions = ({ navigation, screenProps }) => ({
     title: "Shopping Lists",
-    headerRight: <Button title='+' color='#FFFFFF' onPress={() => navigation.navigate('ShoppingListAdd')} />,
+    headerRight: (
+      <TouchableHighlight underlayColor='transparent' onPress={() => navigation.navigate('ShoppingListAdd')}>
+        <Text style={{ fontSize: 22, color: '#FFFFFF' }}> + </Text>
+      </TouchableHighlight>
+    ),
     headerTintColor: '#FFFFFF',
     headerStyle: {
-      backgroundColor: '#4A90E2'
+      backgroundColor: '#4A90E2',
+      paddingRight: 10
     }
   });
 
