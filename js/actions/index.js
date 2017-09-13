@@ -6,33 +6,43 @@ export const ADD_ITEM = 'ADD_ITEM';
 export const DELETE_ITEM = 'DELETE_ITEM';
 export const DELETE_LIST = 'DELETE_LIST';
 export const LOAD_LISTS = 'LOAD_LISTS';
-export const SET_CURRENT_LIST = 'SET_CURRENT_LIST';
+export const SET_ACTIVE_LIST = 'SET_ACTIVE_LIST';
+export const LOAD_ACTIVE_ITEMS = 'LOAD_ACTIVE_ITEMS';
 export const UPDATE_ITEM_CHECKED = 'UPDATE_ITEM_CHECKED';
 export const UPDATE_NEW_ITEM_TEXT = 'UPDATE_NEW_ITEM_TEXT';
 
 export function loadLists() {
   return dispatch => {
-    db.allDocs({ include_docs: true }, (err, body) => {
-      if (err || !body.rows) {
-        // handle error
-      }
-      else {
-        lists = [];
-        for (let row of body.rows) {
-          lists.push(row.doc);
+    let lists = [];
+    db.find({selector: {type: 'list'}})
+      .then((result) => {
+        for (let doc of result.docs) {
+          lists.push({listId: doc._id, list: doc, itemCount: 0, items: []});
+        }
+        return db.find({selector: {type: 'item'}})
+      }).then((result) => {
+        for (let doc of result.docs) {
+          for (let list of lists) {
+            if (doc.list == list.listId) {
+              list.items.push(doc);
+              list.itemCount = list.itemCount + 1;
+              break;  
+            }
+          }
         }
         dispatch({
           type: LOAD_LISTS,
           payload: lists
         });
-      }
-    });
+      }).catch((err) => {
+        // todo
+      });
   };
 }
 
-export function setCurrentList(list) {
+export function setActiveList(list) {
   return {
-    type: SET_CURRENT_LIST,
+    type: SET_ACTIVE_LIST,
     payload: list
   }
 }
@@ -76,6 +86,24 @@ export function deleteList(list) {
   };
 }
 
+export function loadActiveItems(listId) {
+  return dispatch => {
+    db.find({selector: {type: 'item', list: listId}})
+      .then((result) => {
+        items = [];
+        for (let doc of result.docs) {
+            items.push(doc);
+        }
+        dispatch({
+          type: LOAD_ACTIVE_ITEMS,
+          payload: items
+        });
+      }).catch((err) => {
+      // todo
+    });
+  };
+}
+
 export function updateNewItemText(text) {
   return {
     type: UPDATE_NEW_ITEM_TEXT,
@@ -83,26 +111,21 @@ export function updateNewItemText(text) {
   }
 }
 
-export function addItem(text, list) {
-  if (!list.items) {
-    list.items = [];
-  }
+export function addItem(text, listId) {
   let item = {
     _id: uuid.v4(),
     type: 'item',
     version: 1,
-    list: list._id,
+    list: listId,
     title: text,
     checked: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
-  list.items.push(item);
-  list.updatedAt = new Date().toISOString();
   return dispatch => {
-    db.put(list)
+    db.put(item)
       .then((response) => {
-        list._rev = response.rev;
+        item._rev = response.rev;
         dispatch({
           type: ADD_ITEM,
           payload: item
@@ -114,13 +137,13 @@ export function addItem(text, list) {
   };
 }
 
-export function updateItemChecked(item, list) {
+export function updateItemChecked(item) {
   item.checked = ! item.checked;
-  list.updatedAt = new Date().toISOString();
+  item.updatedAt = new Date().toISOString();
   return dispatch => {
-    db.put(list)
+    db.put(item)
       .then((response) => {
-        list._rev = response.rev;
+        item._rev = response.rev;
         dispatch({
           type: UPDATE_ITEM_CHECKED,
           payload: item
@@ -132,19 +155,10 @@ export function updateItemChecked(item, list) {
   };
 }
 
-export function deleteItem(item, list) {
-  if (! list.items) {
-    return;
-  }
-  var index = list.items.indexOf(item);
-  if (index > -1) {
-    list.items.splice(index, 1);
-  }
-  list.updatedAt = new Date().toISOString();
+export function deleteItem(item) {
   return dispatch => {
-    db.put(list)
+    db.remove(item)
       .then((response) => {
-        list._rev = response.rev;
         dispatch({
           type: DELETE_ITEM,
           payload: item

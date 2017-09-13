@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ShoppingListItem from './shopping_list_item';
 import ShoppingListItemAdd from './shopping_list_item_add';
-import { setCurrentList } from '../actions/index'
+import { loadActiveItems, setActiveList } from '../actions/index'
 
 class ShoppingListManage extends Component {
 
@@ -13,28 +13,35 @@ class ShoppingListManage extends Component {
   }
 
   componentDidMount() {
-    this.props.setCurrentList(this.props.list);
+    this.props.setActiveList(this.props.list);
+    this.props.loadActiveItems(this.props.list._id);
   }
 
-  renderFlatListItem(item, list) {
+  renderFlatListItem(item) {
     return (
-      <ShoppingListItem item={item} list={list} />
+      <ShoppingListItem item={item} />
     );
   }
   
   render() {
-    const list = this.props.currentList ? this.props.currentList : this.props.list;
+    let counter = 0;
+    let list = this.props.list;
+    let items = [];
+    if (this.props.activeList) {
+      counter = this.props.activeList.counter;
+      list = this.props.activeList.list;
+      items = this.props.activeList.items;
+    }
     return (
       <View style={styles.container}>
         <Text>{list.title}</Text>
         <FlatList
-          data={list.items}
-          renderItem={({ item }) => this.renderFlatListItem(item, list)}
-          keyExtractor={item => item._id}
-          extraData={list._rev}
+          data={items}
+          renderItem={({ item }) => this.renderFlatListItem(item)}
+          keyExtractor={item => item._rev}
         >
         </FlatList>
-        <ShoppingListItemAdd list={list} onItemTextChanged={this.props.onItemTextChanged} onItemAdded={this.props.onItemAdded} />
+        <ShoppingListItemAdd listId={list._id} />
       </View>
     );
   }
@@ -55,13 +62,14 @@ const styles = StyleSheet.create({
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    setCurrentList: setCurrentList
+    setActiveList: setActiveList,
+    loadActiveItems: loadActiveItems
   }, dispatch);
 }
 
 function mapStateToProps(state) {
 	return {
-    currentList: state.currentList
+    activeList: state.activeList
 	};
 }
 
