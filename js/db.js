@@ -7,6 +7,4 @@ const remoteDbUrl = "http://admin:pass@192.168.1.70:35984/testdb";
 const remoteDb = new PouchDB(remoteDbUrl);
 const db = new PouchDB('testdb', { adapter: 'asyncstorage' });
 
-console.log('db db db db');
-
 export { db, remoteDb }
