@@ -8,7 +8,7 @@ import { deleteList } from '../actions/index';
 class ShoppingList extends Component {
 
   delete() {
-    this.props.deleteList(this.props.list, this.props.pouchdb);
+    this.props.deleteList(this.props.list);
   }
 
   render() {
@@ -20,7 +20,7 @@ class ShoppingList extends Component {
     }];
     return (
       <Swipeout
-        style={styles.swipe}
+        style={styles.swipeout}
         right={swipeBtns}
         autoClose={true}
         backgroundColor='transparent'
@@ -37,7 +37,7 @@ class ShoppingList extends Component {
 }
 
 const styles = StyleSheet.create({
-  swipe: {
+  swipeout: {
     marginTop: 10,
     marginLeft: 10,
     marginRight: 10,
@@ -59,8 +59,9 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps(state) {
-	return {
-	};
+  return {
+    listsLoaded: state.listsLoaded
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShoppingList);

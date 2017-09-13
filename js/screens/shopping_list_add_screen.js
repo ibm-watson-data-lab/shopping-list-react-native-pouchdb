@@ -20,7 +20,7 @@ class ShoppingListAddScreen extends Component {
   }
 
   save(navigation) {
-    this.props.addList(navigation.state.params.text, navigation.state.params.pouchdb);
+    this.props.addList(navigation.state.params.text);
     // mw:TODO - this should probably happen after the save is successful
     navigation.goBack();
   }
@@ -30,11 +30,15 @@ class ShoppingListAddScreen extends Component {
   }
 
   render() {
+    let text = '';
+    if (this.props.navigation && this.props.navigation.state && this.props.navigation.state.params && this.props.navigation.state.params.text) {
+      text = this.props.navigation.state.params.text;
+    }
     return (
       <TextInput
         style={styles.container}
         onChangeText={(text) => this.props.navigation.setParams({ text: text })}
-        value={this.props.navigation.state.params.text}
+        value={text}
       />
     );
   }

@@ -13,11 +13,11 @@ class ShoppingListItem extends Component {
   }
   
   update() {
-    this.props.updateItemChecked(this.props.item, this.props.list, this.props.pouchdb);
+    this.props.updateItemChecked(this.props.item, this.props.list);
   }
 
   delete() {
-    this.props.deleteItem(this.props.item, this.props.list, this.props.pouchdb);
+    this.props.deleteItem(this.props.item, this.props.list);
   }
 
   render() {
@@ -56,10 +56,4 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps(state) {
-	return {
-		itemUpdated: state.itemUpdated
-	};
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ShoppingListItem);
+export default connect(null, mapDispatchToProps)(ShoppingListItem);

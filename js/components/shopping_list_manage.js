@@ -1,47 +1,44 @@
 import React, { Component } from 'react';
 import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import ShoppingListItem from './shopping_list_item';
 import ShoppingListItemAdd from './shopping_list_item_add';
+import { setCurrentList } from '../actions/index'
 
 class ShoppingListManage extends Component {
 
   constructor(props) {
     super(props);
-   }
+  }
 
-  renderFlatListItem(item) {
+  componentDidMount() {
+    this.props.setCurrentList(this.props.list);
+  }
+
+  renderFlatListItem(item, list) {
     return (
-      <ShoppingListItem item={item} list={this.props.list} pouchdb={this.props.pouchdb} />
+      <ShoppingListItem item={item} list={list} />
     );
   }
   
   render() {
+    const list = this.props.currentList ? this.props.currentList : this.props.list;
     return (
       <View style={styles.container}>
-        <Text>{this.props.list.name}</Text>
+        <Text>{list.name}</Text>
         <FlatList
-          data={this.props.list.items}
-          renderItem={({ item }) => this.renderFlatListItem(item)}
+          data={list.items}
+          renderItem={({ item }) => this.renderFlatListItem(item, list)}
           keyExtractor={item => item._id}
-          extraData={this.props.list._rev}
+          extraData={list._rev}
         >
         </FlatList>
-        <ShoppingListItemAdd list={this.props.list} pouchdb={this.props.pouchdb} onItemTextChanged={this.props.onItemTextChanged} onItemAdded={this.props.onItemAdded} />
+        <ShoppingListItemAdd list={list} onItemTextChanged={this.props.onItemTextChanged} onItemAdded={this.props.onItemAdded} />
       </View>
     );
   }
 }
-
-function mapStateToProps(state) {
-	return {
-    itemAdded: state.itemAdded,
-    itemUpdated: state.itemUpdated,
-    itemDeleted: state.itemDeleted
-	};
-}
-
-export default connect(mapStateToProps)(ShoppingListManage);
 
 const styles = StyleSheet.create({
   container: {
@@ -55,3 +52,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
   }
 });
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    setCurrentList: setCurrentList
+  }, dispatch);
+}
+
+function mapStateToProps(state) {
+	return {
+    currentList: state.currentList
+	};
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(ShoppingListManage);

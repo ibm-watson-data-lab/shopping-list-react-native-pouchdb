@@ -12,7 +12,6 @@ export default class ShoppingListList extends Component {
     return (
       <ShoppingList
         list={list}
-        pouchdb={this.props.pouchdb}
         onListPressed={this.props.onListPressed}
       />
     );
@@ -22,7 +21,7 @@ export default class ShoppingListList extends Component {
     return (
       <View style={{flex: 1}}>
         <FlatList style={{flex: 1}}
-          data={this.props.docs}
+          data={this.props.lists}
           renderItem={({ item }) => this.renderFlatListItem(item)}
           keyExtractor={item => item._id}
         >

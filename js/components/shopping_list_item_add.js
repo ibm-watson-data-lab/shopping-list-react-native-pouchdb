@@ -12,7 +12,7 @@ class ShoppingListItemAdd extends Component {
   }
 
   save() {
-    this.props.addItem(this.props.text, this.props.list, this.props.pouchdb);
+    this.props.addItem(this.props.text, this.props.list);
     this.props.updateNewItemText('');
   }
 

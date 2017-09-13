@@ -1,17 +1,48 @@
+import { db } from '../db'
+
 export const ADD_LIST = 'ADD_LIST';
 export const ADD_ITEM = 'ADD_ITEM';
 export const DELETE_ITEM = 'DELETE_ITEM';
 export const DELETE_LIST = 'DELETE_LIST';
+export const LOAD_LISTS = 'LOAD_LISTS';
+export const SET_CURRENT_LIST = 'SET_CURRENT_LIST';
 export const UPDATE_ITEM_CHECKED = 'UPDATE_ITEM_CHECKED';
 export const UPDATE_NEW_ITEM_TEXT = 'UPDATE_NEW_ITEM_TEXT';
 
-export function addList(text, pouchdb) {
+export function loadLists() {
+  return dispatch => {
+    db.allDocs({ include_docs: true }, (err, body) => {
+      if (err || !body.rows) {
+        // handle error
+      }
+      else {
+        lists = [];
+        for (let row of body.rows) {
+          lists.push(row.doc);
+        }
+        dispatch({
+          type: LOAD_LISTS,
+          payload: lists
+        });
+      }
+    });
+  };
+}
+
+export function setCurrentList(list) {
+  return {
+    type: SET_CURRENT_LIST,
+    payload: list
+  }
+}
+
+export function addList(text) {
   let list = {
     type: 'list',
     name: text,
   }
   return dispatch => {
-    pouchdb.post(list)
+    db.post(list)
       .then((response) => {
         dispatch({
           type: ADD_LIST,
@@ -24,9 +55,9 @@ export function addList(text, pouchdb) {
   };
 }
 
-export function deleteList(list, pouchdb) {
+export function deleteList(list) {
   return dispatch => {
-    pouchdb.remove(list)
+    db.remove(list)
       .then((response) => {
         dispatch({
           type: DELETE_LIST,
@@ -46,7 +77,7 @@ export function updateNewItemText(text) {
   }
 }
 
-export function addItem(text, list, pouchdb) {
+export function addItem(text, list) {
   if (!list.items) {
     list.items = [];
   }
@@ -57,7 +88,7 @@ export function addItem(text, list, pouchdb) {
   };
   list.items.push(item);
   return dispatch => {
-    pouchdb.put(list)
+    db.put(list)
       .then((response) => {
         list._rev = response.rev;
         dispatch({
@@ -71,10 +102,10 @@ export function addItem(text, list, pouchdb) {
   };
 }
 
-export function updateItemChecked(item, list, pouchdb) {
+export function updateItemChecked(item, list) {
   item.checked = ! item.checked;
   return dispatch => {
-    pouchdb.put(list)
+    db.put(list)
       .then((response) => {
         list._rev = response.rev;
         console.log('DISPATCHING UPDATE_ITEM_CHECKED');
@@ -89,7 +120,7 @@ export function updateItemChecked(item, list, pouchdb) {
   };
 }
 
-export function deleteItem(item, list, pouchdb) {
+export function deleteItem(item, list) {
   if (! list.items) {
     return;
   }
@@ -98,7 +129,7 @@ export function deleteItem(item, list, pouchdb) {
     list.items.splice(index, 1);
   }
   return dispatch => {
-    pouchdb.put(list)
+    db.put(list)
       .then((response) => {
         list._rev = response.rev;
         dispatch({
