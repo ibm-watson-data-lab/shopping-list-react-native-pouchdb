@@ -93,7 +93,7 @@ export function addItem(text, list) {
         list._rev = response.rev;
         dispatch({
           type: ADD_ITEM,
-          payload: list._rev
+          payload: item
         });
       }).catch((err) => {
         // mw:TODO
@@ -108,10 +108,9 @@ export function updateItemChecked(item, list) {
     db.put(list)
       .then((response) => {
         list._rev = response.rev;
-        console.log('DISPATCHING UPDATE_ITEM_CHECKED');
         dispatch({
           type: UPDATE_ITEM_CHECKED,
-          payload: list._rev
+          payload: item
         });
       }).catch((err) => {
         // mw:TODO
@@ -134,7 +133,7 @@ export function deleteItem(item, list) {
         list._rev = response.rev;
         dispatch({
           type: DELETE_ITEM,
-          payload: list._rev
+          payload: item
         });
       }).catch((err) => {
         // mw:TODO
