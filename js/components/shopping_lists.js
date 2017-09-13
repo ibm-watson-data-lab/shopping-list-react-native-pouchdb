@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { FlatList, StyleSheet, TextInput, View } from 'react-native';
 import ShoppingList from './shopping_list';
 
-export default class ShoppingListList extends Component {
+export default class ShoppingLists extends Component {
 
   constructor(props) {
     super(props);
@@ -11,7 +11,8 @@ export default class ShoppingListList extends Component {
   renderFlatListItem(list) {
     return (
       <ShoppingList
-        list={list}
+        list={list.list}
+        itemCount={list.itemCount}
         onListPressed={this.props.onListPressed}
       />
     );
@@ -23,7 +24,7 @@ export default class ShoppingListList extends Component {
         <FlatList style={{flex: 1}}
           data={this.props.lists}
           renderItem={({ item }) => this.renderFlatListItem(item)}
-          keyExtractor={item => item._id}
+          keyExtractor={item => item.list._rev}
         >
         </FlatList>
       </View>

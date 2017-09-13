@@ -27,19 +27,21 @@ class ShoppingListScreen extends Component {
 
   handleDonePressed() {
     if (this.props.newItemText != '') {
-      this.props.addItem(this.props.newItemText, this.props.navigation.state.params.list);
+      this.props.addItem(this.props.newItemText, this.props.navigation.state.params.list._id);
       this.props.updateNewItemText('');
     }
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({ buttonTitle: '', onDonePressed: () => this.handleDonePressed() })
+    let list = this.props.activeList ? this.props.activeList.list : this.props.navigation.state.params.list;
+    this.props.navigation.setParams({ list: list, buttonTitle: '', onDonePressed: () => this.handleDonePressed() })
   }
 
   componentWillUpdate(nextProps) {
+    let list = nextProps.activeList ? nextProps.activeList.list : nextProps.navigation.state.params.list;
     let buttonTitle = (! nextProps.newItemText || nextProps.newItemText == '') ? '' : 'Done';
-    if (buttonTitle != nextProps.navigation.state.params.buttonTitle) {
-      nextProps.navigation.setParams({ buttonTitle: buttonTitle, onDonePressed: () => this.handleDonePressed() })
+    if (buttonTitle != nextProps.navigation.state.params.buttonTitle || list.title != this.props.navigation.state.params.list.title) {
+      nextProps.navigation.setParams({ list: list, buttonTitle: buttonTitle, onDonePressed: () => this.handleDonePressed() })
     }
   }
 
@@ -59,7 +61,8 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
 	return {
-    newItemText: state.newItemText
+    newItemText: state.newItemText,
+    activeList: state.activeList
 	};
 }
 

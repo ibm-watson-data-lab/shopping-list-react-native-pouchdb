@@ -12,7 +12,6 @@ class ShoppingList extends Component {
   }
 
   render() {
-    let len = this.props.list.items ? this.props.list.items.length : 0;
     let swipeBtns = [{
       text: 'Delete',
       backgroundColor: '#FF0000',
@@ -28,7 +27,7 @@ class ShoppingList extends Component {
         <TouchableHighlight underlayColor='transparent' style={styles.container} onPress={() => this.props.onListPressed(this.props.list)}>
           <View>
             <Text>{this.props.list.title}</Text>
-            <Text>{`${len} item(s)`}</Text>
+            <Text>{`${this.props.itemCount} item(s)`}</Text>
           </View>
         </TouchableHighlight>
       </Swipeout>
@@ -58,10 +57,4 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps(state) {
-  return {
-    listsLoaded: state.listsLoaded
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ShoppingList);
+export default connect(null, mapDispatchToProps)(ShoppingList);

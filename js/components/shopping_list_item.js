@@ -13,11 +13,11 @@ class ShoppingListItem extends Component {
   }
   
   update() {
-    this.props.updateItemChecked(this.props.item, this.props.list);
+    this.props.updateItemChecked(this.props.item);
   }
 
   delete() {
-    this.props.deleteItem(this.props.item, this.props.list);
+    this.props.deleteItem(this.props.item);
   }
 
   render() {
