@@ -8,10 +8,10 @@ global.navigator.userAgent = 'reactnative';
 
 PouchDB.plugin(PouchDBAsyncStorageAdapter);
 PouchDB.plugin(PouchDBFind);
-const remoteDbUrl = "http://admin:pass@9.24.7.248:35984/testdb";
-//const remoteDbUrl = "http://admin:pass@192.168.1.70:35984/testdb";
+const remoteDbUrl = "http://admin:pass@9.24.7.248:35984/shopping-list";
+//const remoteDbUrl = "http://admin:pass@192.168.1.70:35984/shopping-list";
 const remoteDb = new PouchDB(remoteDbUrl);
-const db = new PouchDB('testdb', { adapter: 'asyncstorage' });
+const db = new PouchDB('shopping-list', { adapter: 'asyncstorage' });
 const shoppingListFactory = new ShoppingListFactory(); 
 const shoppingListRepository = new ShoppingListRepositoryPouchDB(db);
 
