@@ -17,6 +17,16 @@ class ShoppingList extends Component {
       backgroundColor: '#FF0000',
       onPress: () => { this.delete() }
     }];
+    let itemsString = '';
+    if (this.props.itemCount == 0) {
+      itemsString = '0 items';
+    }
+    else if (this.props.itemCount == 1) {
+      itemsString = `1 item ${this.props.itemCheckedCount > 0 ? '' : 'un'}checked.`;
+    }
+    else {
+      itemsString = `${this.props.itemCheckedCount} of ${this.props.itemCount} items checked.`;
+    }
     return (
       <Swipeout
         style={styles.swipeout}
@@ -27,7 +37,7 @@ class ShoppingList extends Component {
         <TouchableHighlight underlayColor='transparent' style={styles.container} onPress={() => this.props.onListPressed(this.props.list)}>
           <View>
             <Text>{this.props.list.title}</Text>
-            <Text>{`${this.props.itemCount} item(s)`}</Text>
+            <Text>{itemsString}</Text>
           </View>
         </TouchableHighlight>
       </Swipeout>

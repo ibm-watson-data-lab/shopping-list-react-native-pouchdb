@@ -1,4 +1,4 @@
-import { db, shoppingListFactory, shoppingListRepository } from '../db'
+import { shoppingListFactory, shoppingListRepository } from '../db'
 
 export const ADD_LIST = 'ADD_LIST';
 export const ADD_ITEM = 'ADD_ITEM';
@@ -13,26 +13,32 @@ export const UPDATE_NEW_ITEM_TEXT = 'UPDATE_NEW_ITEM_TEXT';
 export function loadLists() {
   return dispatch => {
     let lists = [];
-    // to load all lists we have to use allDocs due to an issue in pouchdb/React Native:
-    // https://github.com/pouchdb/pouchdb/issues/6584
-    db.allDocs({include_docs: true})
-      .then((result) => {
-        // get lists
-        for (let row of result.rows) {
-          doc = row.doc;
-          if (doc.type && doc.type == 'list') {
-            lists.push({listId: doc._id, list: doc, itemCount: 0, items: []});
-          }
+    let listItemPromises = [];
+    shoppingListRepository.find()
+      .then((allLists) => {
+        for (let list of allLists) {
+          lists.push({listId: list._id, list: list, itemCount: 0, itemCheckedCount: 0, items: []});
+          listItemPromises.push(shoppingListRepository.findItems({
+            selector: {
+              type: 'item',
+              list: list._id
+            }
+          }));
         }
-        // get items
-        for (let row of result.rows) {
-          doc = row.doc;
-          if (doc.type && doc.type == 'item') {
+        return Promise.all(listItemPromises);
+      })
+      .then((itemLists) => {
+        for (let itemList of itemLists) {
+          const itemArray = itemList.toArray();
+          for (let item of itemArray) {
             for (let list of lists) {
-              if (doc.list == list.listId) {
-                list.items.push(doc);
+              if (item.list == list.listId) {
+                list.items.push(item);
                 list.itemCount = list.itemCount + 1;
-                break;  
+                if (item.checked) {
+                  list.itemCheckedCount = list.itemCheckedCount + 1;
+                }
+                break;
               }
             }
           }
@@ -42,7 +48,8 @@ export function loadLists() {
           payload: lists
         });
       }).catch((err) => {
-        // todo
+        // TODO:
+        console.log(err);
       });
   };
 }
@@ -61,7 +68,7 @@ export function addList(text) {
     shoppingListRepository.post(list).then(list => {
       dispatch({
         type: ADD_LIST,
-        payload: {list: list, itemCount: 0, items: []}
+        payload: {list: list, itemCount: 0, itemCheckedCount: 0, items: []}
       });
     });
   };
@@ -83,19 +90,21 @@ export function deleteList(list) {
 
 export function loadActiveItems(listId) {
   return dispatch => {
-    db.find({selector: {type: 'item', list: listId}})
-      .then((result) => {
-        items = [];
-        for (let doc of result.docs) {
-            items.push(doc);
-        }
+    shoppingListRepository.findItems({
+      selector: {
+        type: 'item',
+        list: listId
+      }
+    })
+      .then((items) => {
         dispatch({
           type: LOAD_ACTIVE_ITEMS,
-          payload: items
+          payload: items.toArray()
         });
       }).catch((err) => {
-      // todo
-    });
+        // TODO:
+        console.log(err);
+      });
   };
 }
 
@@ -132,6 +141,9 @@ export function updateItemChecked(item) {
         type: UPDATE_ITEM_CHECKED,
         payload: item
       });
+    }).catch(err => {
+      // TODO:
+      console.log(err);
     });
   };
 }

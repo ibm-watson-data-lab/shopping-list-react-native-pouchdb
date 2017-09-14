@@ -13,6 +13,7 @@ export default class ShoppingLists extends Component {
       <ShoppingList
         list={list.list}
         itemCount={list.itemCount}
+        itemCheckedCount={list.itemCheckedCount}
         onListPressed={this.props.onListPressed}
       />
     );

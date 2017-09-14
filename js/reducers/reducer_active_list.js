@@ -29,15 +29,14 @@ export default function (state = null, action) {
               break;
             }
           }
-          
         }
         break;
       case DELETE_ITEM:
         if (state && state.list && state.list._id == action.payload.list) {
           for (let i = state.items.length - 1; i >= 0; i--) {
             if (state.items[i]._id == action.payload._id) {
-              state.items.splice(i, 1);
               let newItems = Array.from(state.items);
+              newItems.splice(i, 1);
               state = { list: state.list, items: newItems, deleted: false };
               break;
             }

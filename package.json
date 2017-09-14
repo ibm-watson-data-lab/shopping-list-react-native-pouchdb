@@ -7,9 +7,9 @@
 		"test": "jest"
 	},
 	"dependencies": {
-		"ibm-shopping-list-model": "^0.1.7",
-		"pouchdb-adapter-asyncstorage": "^6.3.4",
-		"pouchdb-browser": "^6.3.4",
+		"ibm-shopping-list-model": "^0.1.11",
+		"pouchdb-find": "^6.3.4",
+		"pouchdb-react-native": "^6.3.4",
 		"react": "16.0.0-alpha.12",
 		"react-native": "0.48.2",
 		"react-native-check-box": "^2.0.1",

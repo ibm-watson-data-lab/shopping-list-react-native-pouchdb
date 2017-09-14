@@ -40,10 +40,12 @@ export default class ShoppingListApp extends Component  {
         }
         // will be handled by subscribing to changes below
       }).on('error', (err) => {
-        // todo
+        // TODO:
+        console.log(err);
       });
     }).catch(function (err) {
-      // todo
+      // TODO:
+      console.log(err);
     });
   }
 
