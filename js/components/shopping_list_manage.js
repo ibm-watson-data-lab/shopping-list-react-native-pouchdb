@@ -22,7 +22,7 @@ class ShoppingListManage extends Component {
       <ShoppingListItem item={item} />
     );
   }
-  
+
   render() {
     let list = this.props.list;
     let items = [];
@@ -77,9 +77,9 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps(state) {
-	return {
+  return {
     activeList: state.activeList
-	};
+  };
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(ShoppingListManage);
+export default connect(mapStateToProps, mapDispatchToProps)(ShoppingListManage);

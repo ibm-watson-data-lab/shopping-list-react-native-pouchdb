@@ -26,12 +26,12 @@ class ShoppingListItemAdd extends Component {
       textInputStyles.push(styles.textInputiOS);
     }
     return (
-      <View style={{flexDirection: 'row', padding: 10}}>
+      <View style={{ flexDirection: 'row', padding: 10 }}>
         <CheckBox
           checkBoxColor='#4A90E2'
           disabled={true}
           isChecked={false}
-          onClick={()=>this.handleCheckBoxClick()}
+          onClick={() => this.handleCheckBoxClick()}
         />
         <TextInput
           style={textInputStyles}
@@ -61,14 +61,14 @@ const styles = StyleSheet.create({
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     updateNewItemText: updateNewItemText,
-    addItem: addItem 
+    addItem: addItem
   }, dispatch);
 }
 
 function mapStateToProps(state) {
-	return {
-		text: state.newItemText
-	};
+  return {
+    text: state.newItemText
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShoppingListItemAdd);

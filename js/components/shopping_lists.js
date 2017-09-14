@@ -20,8 +20,8 @@ export default class ShoppingLists extends Component {
 
   render() {
     return (
-      <View style={{flex: 1}}>
-        <FlatList style={{flex: 1}}
+      <View style={{ flex: 1 }}>
+        <FlatList style={{ flex: 1 }}
           data={this.props.lists}
           renderItem={({ item }) => this.renderFlatListItem(item)}
           keyExtractor={item => item.list._rev}

@@ -11,7 +11,7 @@ class ShoppingListItem extends Component {
   constructor(props) {
     super(props);
   }
-  
+
   update() {
     this.props.updateItemChecked(this.props.item);
   }
@@ -21,8 +21,8 @@ class ShoppingListItem extends Component {
   }
 
   render() {
-    let textDecorationLine = this.props.item.checked ? 'line-through': 'none';
-    let textColor = this.props.item.checked ? '#9E9E9E': '#000000';
+    let textDecorationLine = this.props.item.checked ? 'line-through' : 'none';
+    let textColor = this.props.item.checked ? '#9E9E9E' : '#000000';
     let swipeBtns = [{
       text: 'Delete',
       backgroundColor: '#FF0000',
@@ -34,14 +34,14 @@ class ShoppingListItem extends Component {
         autoClose={true}
         backgroundColor='transparent'
       >
-        <View style={{flexDirection: 'row', padding: 10}}>
+        <View style={{ flexDirection: 'row', padding: 10 }}>
           <CheckBox
-            style={{flex: 1}}
+            style={{ flex: 1 }}
             checkBoxColor='#4A90E2'
-            onClick={()=>this.update()}
+            onClick={() => this.update()}
             isChecked={this.props.item.checked}
             rightText={this.props.item.title}
-            rightTextStyle={{textDecorationLine: textDecorationLine, color: textColor}}
+            rightTextStyle={{ textDecorationLine: textDecorationLine, color: textColor }}
           />
         </View>
       </Swipeout>
