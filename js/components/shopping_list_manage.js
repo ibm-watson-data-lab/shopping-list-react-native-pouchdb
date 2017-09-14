@@ -24,26 +24,35 @@ class ShoppingListManage extends Component {
   }
   
   render() {
-    let counter = 0;
     let list = this.props.list;
     let items = [];
+    let deleted = false;
     if (this.props.activeList) {
-      counter = this.props.activeList.counter;
       list = this.props.activeList.list;
       items = this.props.activeList.items;
+      deleted = this.props.activeList.deleted;
     }
-    return (
-      <View style={styles.container}>
-        <Text>{list.title}</Text>
-        <FlatList
-          data={items}
-          renderItem={({ item }) => this.renderFlatListItem(item)}
-          keyExtractor={item => item._rev}
-        >
-        </FlatList>
-        <ShoppingListItemAdd listId={list._id} />
-      </View>
-    );
+    if (deleted) {
+      return (
+        <View style={styles.container}>
+          <Text>This list has been deleted.</Text>
+        </View>
+      );
+    }
+    else {
+      return (
+        <View style={styles.container}>
+          <Text>{list.title}</Text>
+          <FlatList
+            data={items}
+            renderItem={({ item }) => this.renderFlatListItem(item)}
+            keyExtractor={item => item._rev}
+          >
+          </FlatList>
+          <ShoppingListItemAdd listId={list._id} />
+        </View>
+      );
+    }
   }
 }
 
