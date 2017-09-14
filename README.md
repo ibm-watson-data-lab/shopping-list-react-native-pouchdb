@@ -31,11 +31,22 @@ Shopping List is an Offline First demo [Progressive Web App | hybrid mobile app 
 
 ### Run on iOS Emulator:
 
-1. In a terminal cd into the repo directory and run:
+1. In a terminal cd into the repo directory and run the following command:
 
 `react-native run-ios`
 
-#### Troubleshooting
+If you are having problems please see the troubleshooting section below.
+
+### Run on Android Emulator
+
+1. Create and start an AVD
+2. In a terminal cd into the repo directory and run the following command:
+
+`react-native run-android`
+
+If you are having problems please see the troubleshooting section below.
+
+## Troubleshooting
 
 1. If you encounter issues running the react-native CLI you may need to make a few scripts executable. You can do this on Mac/Linux by running the following commands:
 
@@ -45,15 +56,3 @@ chmod +x node_modules/react-native/local-cli/*.sh
 chmod +x node_modules/react-native/scripts/*.sh
 chmod +x node_modules/react-native/scripts/*.command
 ```
-
-### Run on Android Emulator
-
-1. Create and start an AVD
-2. In a terminal cd into the repo directory
-3. Start the debugger:
-
-`npm start &`
-
-4. Run the following command:
-
-`react-native run-android`
