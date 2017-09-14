@@ -35,20 +35,15 @@ export default class ShoppingListApp extends Component  {
         live: true,
         retry: true
       }).on('change', (change) => {
+        if (change.direction == 'pull') {
+          store.dispatch(loadLists());
+        }
         // will be handled by subscribing to changes below
       }).on('error', (err) => {
-        console.log(err);
-      });
-      db.changes({
-        since: 'now',
-        live: true
-      }).on('change', (change) => {
-        store.dispatch(loadLists());
-      }).on('error', (err) => {
-        console.log(err);
+        // todo
       });
     }).catch(function (err) {
-      // ouch, an error
+      // todo
     });
   }
 

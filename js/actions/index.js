@@ -1,5 +1,5 @@
 import uuid from 'react-native-uuid';
-import { db } from '../db'
+import { db, shoppingListFactory, shoppingListRepository } from '../db'
 
 export const ADD_LIST = 'ADD_LIST';
 export const ADD_ITEM = 'ADD_ITEM';
@@ -46,43 +46,31 @@ export function setActiveList(list) {
     payload: list
   }
 }
-
 export function addList(text) {
-  let list = {
-    type: 'list',
-    version: 1,
-    title: text,
-    checked: false,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  }
+  let list = shoppingListFactory.newShoppingList({
+    title: text
+  });
   return dispatch => {
-    db.post(list)
-      .then((response) => {
-        list._rev = response.rev;
-        dispatch({
-          type: ADD_LIST,
-          payload: list
-        });
-      }).catch((err) => {
-        // mw:TODO
-        console.log(err);
+    shoppingListRepository.post(list).then(list => {
+      dispatch({
+        type: ADD_LIST,
+        payload: {list: list, itemCount: 0, items: []}
       });
+    });
   };
 }
 
 export function deleteList(list) {
   return dispatch => {
-    db.remove(list)
-      .then((response) => {
-        dispatch({
-          type: DELETE_LIST,
-          payload: list._id
-        });
-      }).catch((err) => {
-        // mw:TODO
-        console.log(err);
+    let originalList = list;
+    shoppingListRepository.get(list._id).then(list => {
+      return shoppingListRepository.delete(list);
+    }).then(list => {
+      dispatch({
+        type: DELETE_LIST,
+        payload: originalList
       });
+    });
   };
 }
 
@@ -112,60 +100,45 @@ export function updateNewItemText(text) {
 }
 
 export function addItem(text, listId) {
-  let item = {
-    _id: uuid.v4(),
-    type: 'item',
-    version: 1,
-    list: listId,
-    title: text,
-    checked: false,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  };
   return dispatch => {
-    db.put(item)
-      .then((response) => {
-        item._rev = response.rev;
+    shoppingListRepository.get(listId)
+      .then(list => {
+        let item = shoppingListFactory.newShoppingListItem({title: text}, list);
+        return shoppingListRepository.postItem(item);
+      }).then(item => {
         dispatch({
           type: ADD_ITEM,
           payload: item
         });
-      }).catch((err) => {
-        // mw:TODO
-        console.log(err);
       });
   };
 }
 
 export function updateItemChecked(item) {
-  item.checked = ! item.checked;
-  item.updatedAt = new Date().toISOString();
   return dispatch => {
-    db.put(item)
-      .then((response) => {
-        item._rev = response.rev;
-        dispatch({
-          type: UPDATE_ITEM_CHECKED,
-          payload: item
-        });
-      }).catch((err) => {
-        // mw:TODO
-        console.log(err);
+    let checked = ! item.checked;
+    shoppingListRepository.getItem(item._id).then(item => {
+      item = item.set('checked', checked);
+      return shoppingListRepository.putItem(item);
+    }).then(item => {
+      dispatch({
+        type: UPDATE_ITEM_CHECKED,
+        payload: item
       });
+    });
   };
 }
 
 export function deleteItem(item) {
   return dispatch => {
-    db.remove(item)
-      .then((response) => {
-        dispatch({
-          type: DELETE_ITEM,
-          payload: item
-        });
-      }).catch((err) => {
-        // mw:TODO
-        console.log(err);
+    let originalItem = item;
+    shoppingListRepository.getItem(originalItem._id).then(item => {
+      return shoppingListRepository.deleteItem(item);
+    }).then(item => {
+      dispatch({
+        type: DELETE_ITEM,
+        payload: originalItem
       });
+    });
   };
 }

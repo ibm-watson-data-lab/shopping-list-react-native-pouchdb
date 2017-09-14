@@ -7,7 +7,7 @@
 		"test": "jest"
 	},
 	"dependencies": {
-		"ibm-shopping-list-model": "^0.1.5",
+		"ibm-shopping-list-model": "^0.1.7",
 		"pouchdb-adapter-asyncstorage": "^6.3.4",
 		"pouchdb-browser": "^6.3.4",
 		"pouchdb-find": "^6.3.4",

@@ -38,7 +38,7 @@ class ShoppingListsScreen extends Component {
 
 function mapStateToProps(state) {
   return {
-    lists: state.listsLoaded
+    lists: state.activeLists
   }
 }
 
