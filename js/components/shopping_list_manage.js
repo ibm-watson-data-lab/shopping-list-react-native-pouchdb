@@ -34,7 +34,7 @@ class ShoppingListManage extends Component {
     }
     if (deleted) {
       return (
-        <View style={styles.container}>
+        <View style={[styles.container, styles.deletedContainer]}>
           <Text>This list has been deleted.</Text>
         </View>
       );
@@ -66,7 +66,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 10,
     marginRight: 10,
-    padding: 10,
+    padding: 10
+  },
+  deletedContainer : {
     alignItems: 'center'
   },
   listContainer: {

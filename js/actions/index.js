@@ -13,19 +13,27 @@ export const UPDATE_NEW_ITEM_TEXT = 'UPDATE_NEW_ITEM_TEXT';
 export function loadLists() {
   return dispatch => {
     let lists = [];
-    db.find({selector: {type: 'list'}})
+    // have to use allDocs due to an issue in React Native with syncing deleted documents
+    // https://github.com/pouchdb/pouchdb/issues/6584
+    db.allDocs({include_docs: true})
       .then((result) => {
-        for (let doc of result.docs) {
-          lists.push({listId: doc._id, list: doc, itemCount: 0, items: []});
+        // get lists
+        for (let row of result.rows) {
+          doc = row.doc;
+          if (doc.type && doc.type == 'list') {
+            lists.push({listId: doc._id, list: doc, itemCount: 0, items: []});
+          }
         }
-        return db.find({selector: {type: 'item'}})
-      }).then((result) => {
-        for (let doc of result.docs) {
-          for (let list of lists) {
-            if (doc.list == list.listId) {
-              list.items.push(doc);
-              list.itemCount = list.itemCount + 1;
-              break;  
+        // get items
+        for (let row of result.rows) {
+          doc = row.doc;
+          if (doc.type && doc.type == 'item') {
+            for (let list of lists) {
+              if (doc.list == list.listId) {
+                list.items.push(doc);
+                list.itemCount = list.itemCount + 1;
+                break;  
+              }
             }
           }
         }
