@@ -4,8 +4,7 @@
 - https://reactnavigation.org/ - React Navigation
 - http://redux.js.org/ - Redux
 - https://github.com/gaearon/redux-thunk - Redux Thunk
-- https://pouchdb.com/ - PouchDB library
-- https://usecuid.org/ - unique id generation
+- https://pouchdb.com/ - PouchDB
 
 # Shopping List - with React Native and PouchDB
 
@@ -21,11 +20,11 @@ Shopping List is an Offline First demo [Progressive Web App | hybrid mobile app 
 
 `git clone https://github.com/ibm-watson-data-lab/shopping-list-react-native-pouchdb`
 
-3. cd into repo directory
+3. cd into the repo directory:
 
 `cd shopping-list-react-native-pouchdb`
 
-4. Install dependencies
+4. Install dependencies:
 
 `npm install`
 
