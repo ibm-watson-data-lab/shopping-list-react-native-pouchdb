@@ -13,7 +13,7 @@ export const UPDATE_NEW_ITEM_TEXT = 'UPDATE_NEW_ITEM_TEXT';
 export function loadLists() {
   return dispatch => {
     let lists = [];
-    // have to use allDocs due to an issue in React Native with syncing deleted documents
+    // to load all lists we have to use allDocs due to an issue in pouchdb/React Native:
     // https://github.com/pouchdb/pouchdb/issues/6584
     db.allDocs({include_docs: true})
       .then((result) => {
