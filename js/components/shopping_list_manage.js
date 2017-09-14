@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ShoppingListItem from './shopping_list_item';
@@ -25,7 +25,7 @@ class ShoppingListManage extends Component {
 
   render() {
     let list = this.props.list;
-    let items = [];
+    let items = null;
     let deleted = false;
     if (this.props.activeList) {
       list = this.props.activeList.list;
@@ -39,9 +39,14 @@ class ShoppingListManage extends Component {
         </View>
       );
     }
+    else if (! items) {
+      return (
+        <ActivityIndicator style={styles.container} animating={true} />
+      );
+    }
     else {
       return (
-        <View style={styles.container}>
+        <View style={[styles.container, styles.listContainer]}>
           <Text>{list.title}</Text>
           <FlatList
             data={items}
@@ -57,15 +62,18 @@ class ShoppingListManage extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container : {
     marginTop: 10,
     marginLeft: 10,
     marginRight: 10,
     padding: 10,
+    alignItems: 'center'
+  },
+  listContainer: {
     backgroundColor: '#FFFFFF',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.2
   }
 });
 

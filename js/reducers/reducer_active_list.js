@@ -4,7 +4,8 @@ export default function (state = null, action) {
   if (action) {
     switch (action.type) {
       case SET_ACTIVE_LIST:
-        state = { list: action.payload, items: [], deleted: false };
+        // set items to null to identify that they haven't been loaded
+        state = { list: action.payload, items: null, deleted: false };
         break;
       case LOAD_ACTIVE_ITEMS:
         if (state && state.list) {
@@ -20,33 +21,26 @@ export default function (state = null, action) {
         break;
       case UPDATE_ITEM_CHECKED:
         if (state && state.list && state.list._id == action.payload.list) {
-          let index = -1;
           for (let i = state.items.length - 1; i >= 0; i--) {
             if (state.items[i]._id == action.payload._id) {
-              index = i;
+              let newItems = Array.from(state.items);
+              newItems.splice(i, 1, action.payload);
+              state = { list: state.list, items: newItems, deleted: false };
               break;
             }
           }
-          let newItems = Array.from(state.items);
-          if (index != -1) {
-            newItems.splice(index, 1, action.payload);
-          }
-          state = { list: state.list, items: newItems, deleted: false };
+          
         }
         break;
       case DELETE_ITEM:
         if (state && state.list && state.list._id == action.payload.list) {
-          let index = -1;
           for (let i = state.items.length - 1; i >= 0; i--) {
             if (state.items[i]._id == action.payload._id) {
-              index = i;
+              state.items.splice(i, 1);
+              let newItems = Array.from(state.items);
+              state = { list: state.list, items: newItems, deleted: false };
               break;
             }
-          }
-          if (index != -1) {
-            state.items.splice(index, 1);
-            let newItems = Array.from(state.items);
-            state = { list: state.list, items: newItems, deleted: false };
           }
         }
         break;
@@ -68,15 +62,11 @@ export default function (state = null, action) {
       case DELETE_LIST:
         // todo - this will never get called because of where it's triggered
         if (state && state.list) {
-          let index = -1;
           for (let i = state.length - 1; i >= 0; i--) {
             if (state[i].list._id == action.payload._id) {
-              index = i;
+              state = { list: state.list, items: state.items, deleted: true };
               break;
             }
-          }
-          if (index != -1) {
-            state = { list: state.list, items: state.items, deleted: true };
           }
         }
         break;
