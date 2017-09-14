@@ -1,4 +1,3 @@
-import uuid from 'react-native-uuid';
 import { db, shoppingListFactory, shoppingListRepository } from '../db'
 
 export const ADD_LIST = 'ADD_LIST';
