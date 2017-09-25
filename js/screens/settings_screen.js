@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { addList } from '../actions/index';
+import { setSyncUrl } from '../actions/index';
 
-class ShoppingListAddScreen extends Component {
+class SettingsScreen extends Component {
 
   static navigationOptions = ({ navigation, screenProps }) => ({
-    title: "New Shopping List",
+    title: "Settings",
     headerRight: (
       <TouchableHighlight underlayColor='transparent' onPress={() => navigation.state.params.save(navigation)}>
         <Text style={{ fontSize: 17, color: '#FFFFFF' }}>Save</Text>
@@ -25,13 +25,13 @@ class ShoppingListAddScreen extends Component {
   }
 
   save(navigation) {
-    this.props.addList(navigation.state.params.text);
-    // TODO: - this should probably happen after the save is successful
+    this.props.setSyncUrl(navigation.state.params.text);
+    // mw:TODO - this should probably happen after the save is successful
     navigation.goBack();
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({ save: (navigation) => this.save(navigation), text: '' });
+    this.props.navigation.setParams({ save: (navigation) => this.save(navigation), text: this.props.syncUrl });
   }
 
   render() {
@@ -61,15 +61,16 @@ const styles = StyleSheet.create({
   }
 });
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    addList: addList
-  }, dispatch);
-}
-
 function mapStateToProps(state) {
-	return {
+  return {
+    syncUrl: state.syncUrl
 	};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShoppingListAddScreen);
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    setSyncUrl: setSyncUrl
+  }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsScreen);

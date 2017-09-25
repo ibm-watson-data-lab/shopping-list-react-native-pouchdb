@@ -8,7 +8,9 @@ import reducers from './reducers';
 import ShoppingListAddScreen from './screens/shopping_list_add_screen';
 import ShoppingListScreen from './screens/shopping_list_screen';
 import ShoppingListsScreen from './screens/shopping_lists_screen';
-import { db, remoteDb } from './db'
+import SettingsScreen from './screens/settings_screen';
+import { settingsDB, shoppingListDB } from './db'
+import SyncManager from './sync'
 import { loadLists } from './actions/index'
 import { ShoppingListFactory, ShoppingListRepositoryPouchDB } from 'ibm-shopping-list-model'
 
@@ -17,36 +19,40 @@ const store = createStore(reducers, applyMiddleware(thunk));
 const ShoppingListNavigator = StackNavigator({
   ShoppingLists: { screen: ShoppingListsScreen },
   ShoppingList: { screen: ShoppingListScreen },
-  ShoppingListAdd: { screen: ShoppingListAddScreen }
+  ShoppingListAdd: { screen: ShoppingListAddScreen },
+  Settings: { screen: SettingsScreen }
 });
 
 export default class ShoppingListApp extends Component  {
+
+  syncManager = null;
+  
   constructor(props) {
     super(props);
-    db.createIndex({
+    shoppingListDB.createIndex({
       index: {
         fields: ['type', 'list']
       }
-    }).then(function (result) {
+    }).then((result) => {
       // load all lists
       store.dispatch(loadLists());
-      // configure replication
-      db.sync(remoteDb, {
-        live: true,
-        retry: true
-      }).on('change', (change) => {
-        if (change.direction == 'pull') {
-          store.dispatch(loadLists());
-        }
-        // will be handled by subscribing to changes below
-      }).on('error', (err) => {
-        // TODO:
-        console.log(err);
-      });
-    }).catch(function (err) {
+      // create sync manager
+      this.syncManager = new SyncManager(store, settingsDB, shoppingListDB, this.onSyncComplete, this.onSyncError);
+    }).catch((err) => {
       // TODO:
       console.log(err);
     });
+  }
+
+  onSyncComplete(change) {
+    if (change.direction == 'pull') {
+      store.dispatch(loadLists());
+    }
+  }
+
+  onSyncError(error) {
+    // TODO:
+    console.log(err);
   }
 
   render() {

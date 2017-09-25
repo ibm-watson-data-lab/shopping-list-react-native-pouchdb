@@ -7,6 +7,11 @@ class ShoppingListsScreen extends Component {
 
   static navigationOptions = ({ navigation, screenProps }) => ({
     title: "Shopping Lists",
+    headerLeft: (
+      <TouchableHighlight underlayColor='transparent' onPress={() => navigation.navigate('Settings')}>
+        <Text style={{ fontSize: 17, color: '#FFFFFF' }}> Settings </Text>
+      </TouchableHighlight>
+    ),
     headerRight: (
       <TouchableHighlight underlayColor='transparent' onPress={() => navigation.navigate('ShoppingListAdd')}>
         <Text style={{ fontSize: 22, color: '#FFFFFF' }}> + </Text>

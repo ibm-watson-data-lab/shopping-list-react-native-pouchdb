@@ -6,11 +6,9 @@ global.navigator.mimeTypes = ''; //browser-fingerprint only checks the length pr
 global.navigator.userAgent = 'reactnative';    
 
 PouchDB.plugin(PouchDBFind);
-const remoteDbUrl = "http://admin:pass@9.24.7.248:35984/shopping-list";
-//const remoteDbUrl = "http://admin:pass@192.168.1.70:35984/shopping-list";
-const remoteDb = new PouchDB(remoteDbUrl);
-const db = new PouchDB('shopping-list', { adapter: 'asyncstorage' });
+const settingsDB = new PouchDB('settings', { adapter: 'asyncstorage' });
+const shoppingListDB = new PouchDB('shopping-list', { adapter: 'asyncstorage' });
 const shoppingListFactory = new ShoppingListFactory(); 
-const shoppingListRepository = new ShoppingListRepositoryPouchDB(db);
+const shoppingListRepository = new ShoppingListRepositoryPouchDB(shoppingListDB);
 
-export { db, remoteDb, shoppingListFactory, shoppingListRepository }
+export { settingsDB, shoppingListDB, shoppingListFactory, shoppingListRepository }

@@ -1,5 +1,6 @@
-import { db, shoppingListFactory, shoppingListRepository } from '../db'
+import { shoppingListDB, shoppingListFactory, shoppingListRepository } from '../db'
 
+export const SET_SYNC_URL = 'SET_SYNC_URL';
 export const ADD_LIST = 'ADD_LIST';
 export const ADD_ITEM = 'ADD_ITEM';
 export const DELETE_ITEM = 'DELETE_ITEM';
@@ -9,6 +10,13 @@ export const SET_ACTIVE_LIST = 'SET_ACTIVE_LIST';
 export const LOAD_ACTIVE_ITEMS = 'LOAD_ACTIVE_ITEMS';
 export const UPDATE_ITEM_CHECKED = 'UPDATE_ITEM_CHECKED';
 export const UPDATE_NEW_ITEM_TEXT = 'UPDATE_NEW_ITEM_TEXT';
+
+export function setSyncUrl(url) {
+  return {
+    type: SET_SYNC_URL,
+    payload: url
+  };
+}
 
 // export function loadLists() {
 //   return dispatch => {
@@ -59,7 +67,7 @@ export function loadLists() {
     let lists = [];
     // to load all lists we have to use allDocs due to an issue in pouchdb/React Native:
     // https://github.com/pouchdb/pouchdb/issues/6584
-    db.allDocs({include_docs: true})
+    shoppingListDB.allDocs({include_docs: true})
       .then((result) => {
         // get lists
         for (let row of result.rows) {
@@ -101,6 +109,7 @@ export function setActiveList(list) {
     payload: list
   }
 }
+
 export function addList(text) {
   let list = shoppingListFactory.newShoppingList({
     title: text
@@ -133,7 +142,7 @@ export function loadActiveItems(listId) {
   return dispatch => {
     // to load active items we have to use allDocs due to an issue in pouchdb/React Native:
     // https://github.com/pouchdb/pouchdb/issues/6584
-    db.allDocs({include_docs: true})
+    shoppingListDB.allDocs({include_docs: true})
       .then((result) => {
         let items = [];
         for (let row of result.rows) {
