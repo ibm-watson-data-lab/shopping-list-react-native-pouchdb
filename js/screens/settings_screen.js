@@ -40,11 +40,14 @@ class SettingsScreen extends Component {
       text = this.props.navigation.state.params.text;
     }
     return (
-      <TextInput
-        style={styles.container}
-        onChangeText={(text) => this.props.navigation.setParams({ text: text })}
-        value={text}
-      />
+      <View>
+        <Text style={{paddingTop: 10, paddingLeft: 10, color: '#4A90E2'}}> Sync URL</Text>
+        <TextInput
+          style={styles.container}
+          onChangeText={(text) => this.props.navigation.setParams({ text: text })}
+          value={text}
+        />
+      </View>
     );
   }
 }
