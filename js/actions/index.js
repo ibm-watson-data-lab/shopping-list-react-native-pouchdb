@@ -1,4 +1,5 @@
-import { shoppingListDB, shoppingListFactory, shoppingListRepository } from '../db'
+import { shoppingListDB } from '../db'
+import cuid from 'cuid';
 
 export const SET_SYNC_URL = 'SET_SYNC_URL';
 export const ADD_LIST = 'ADD_LIST';
@@ -17,50 +18,6 @@ export function setSyncUrl(url) {
     payload: url
   };
 }
-
-// export function loadLists() {
-//   return dispatch => {
-//     let lists = [];
-//     let listItemPromises = [];
-//     shoppingListRepository.find()
-//       .then((allLists) => {
-//         for (let list of allLists) {
-//           lists.push({listId: list._id, list: list, itemCount: 0, itemCheckedCount: 0, items: []});
-//           listItemPromises.push(shoppingListRepository.findItems({
-//             selector: {
-//               type: 'item',
-//               list: list._id
-//             }
-//           }));
-//         }
-//         return Promise.all(listItemPromises);
-//       })
-//       .then((itemLists) => {
-//         for (let itemList of itemLists) {
-//           const itemArray = itemList.toArray();
-//           for (let item of itemArray) {
-//             for (let list of lists) {
-//               if (item.list == list.listId) {
-//                 list.items.push(item);
-//                 list.itemCount = list.itemCount + 1;
-//                 if (item.checked) {
-//                   list.itemCheckedCount = list.itemCheckedCount + 1;
-//                 }
-//                 break;
-//               }
-//             }
-//           }
-//         }
-//         dispatch({
-//           type: LOAD_LISTS,
-//           payload: lists
-//         });
-//       }).catch((err) => {
-//         // TODO:
-//         console.log(err);
-//       });
-//   };
-// }
 
 export function loadLists() {
   return dispatch => {
@@ -110,12 +67,20 @@ export function setActiveList(list) {
   }
 }
 
-export function addList(text) {
-  let list = shoppingListFactory.newShoppingList({
-    title: text
-  });
+export function addList(title) {
+  let createdAt = new Date().toISOString();
+  let list = {
+    _id: 'list:' + cuid(),
+    type: 'list',
+    version: 1,
+    title: title,
+    checked: false,
+    createdAt: createdAt,
+    updatedAt: createdAt
+  };
   return dispatch => {
-    shoppingListRepository.post(list).then(list => {
+    shoppingListDB.put(list).then(result => {
+      list._rev = result.rev;
       dispatch({
         type: ADD_LIST,
         payload: {list: list, itemCount: 0, itemCheckedCount: 0, items: []}
@@ -127,9 +92,9 @@ export function addList(text) {
 export function deleteList(list) {
   return dispatch => {
     let originalList = list;
-    shoppingListRepository.get(list._id).then(list => {
-      return shoppingListRepository.delete(list);
-    }).then(list => {
+    shoppingListDB.get(list._id).then(list => {
+      return shoppingListDB.remove(list);
+    }).then(result => {
       dispatch({
         type: DELETE_LIST,
         payload: originalList
@@ -162,26 +127,6 @@ export function loadActiveItems(listId) {
   };
 }
 
-// export function loadActiveItems(listId) {
-//   return dispatch => {
-//     shoppingListRepository.findItems({
-//       selector: {
-//         type: 'item',
-//         list: listId
-//       }
-//     })
-//       .then((items) => {
-//         dispatch({
-//           type: LOAD_ACTIVE_ITEMS,
-//           payload: items.toArray()
-//         });
-//       }).catch((err) => {
-//         // TODO:
-//         console.log(err);
-//       });
-//   };
-// }
-
 export function updateNewItemText(text) {
   return {
     type: UPDATE_NEW_ITEM_TEXT,
@@ -189,31 +134,41 @@ export function updateNewItemText(text) {
   }
 }
 
-export function addItem(text, listId) {
+export function addItem(title, listId) {
   return dispatch => {
-    shoppingListRepository.get(listId)
-      .then(list => {
-        let item = shoppingListFactory.newShoppingListItem({title: text}, list);
-        return shoppingListRepository.postItem(item);
-      }).then(item => {
-        dispatch({
-          type: ADD_ITEM,
-          payload: item
-        });
+    let createdAt = new Date().toISOString();
+    let item = {
+      _id: 'item:' + cuid(),
+      type: 'item',
+      version: 1,
+      list: listId,
+      title: title,
+      checked: false,
+      createdAt: createdAt,
+      updatedAt: createdAt
+    };
+    shoppingListDB.put(item).then(result => {
+      item._rev = result.rev;
+      dispatch({
+        type: ADD_ITEM,
+        payload: item
       });
+    });
   };
 }
 
 export function updateItemChecked(item) {
   return dispatch => {
     let checked = ! item.checked;
-    shoppingListRepository.getItem(item._id).then(item => {
-      item = item.set('checked', checked);
-      return shoppingListRepository.putItem(item);
-    }).then(item => {
-      dispatch({
-        type: UPDATE_ITEM_CHECKED,
-        payload: item
+    shoppingListDB.get(item._id).then(item => {
+      item.checked = checked;
+      item.updatedAt = new Date().toISOString();
+      shoppingListDB.put(item).then(result => {
+        item._rev = result.rev;
+        dispatch({
+          type: UPDATE_ITEM_CHECKED,
+          payload: item
+        });
       });
     }).catch(err => {
       // TODO:
@@ -225,9 +180,11 @@ export function updateItemChecked(item) {
 export function deleteItem(item) {
   return dispatch => {
     let originalItem = item;
-    shoppingListRepository.getItem(originalItem._id).then(item => {
-      return shoppingListRepository.deleteItem(item);
-    }).then(item => {
+    shoppingListDB.get(item._id).then(item => {
+      return shoppingListDB.remove(item);
+    }).then(result => {
+      console.log(result);
+      console.log(originalItem);
       dispatch({
         type: DELETE_ITEM,
         payload: originalItem

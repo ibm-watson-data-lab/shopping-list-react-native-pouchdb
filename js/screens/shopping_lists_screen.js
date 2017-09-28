@@ -9,7 +9,7 @@ class ShoppingListsScreen extends Component {
     title: "Shopping Lists",
     headerLeft: (
       <TouchableHighlight underlayColor='transparent' onPress={() => navigation.navigate('Settings')}>
-        <Text style={{ fontSize: 17, color: '#FFFFFF' }}> Settings </Text>
+        <Text style={{ fontSize: 17, color: '#FFFFFF' }}>  Sync</Text>
       </TouchableHighlight>
     ),
     headerRight: (

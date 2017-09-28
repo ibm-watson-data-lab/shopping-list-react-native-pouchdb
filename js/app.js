@@ -12,7 +12,6 @@ import SettingsScreen from './screens/settings_screen';
 import { settingsDB, shoppingListDB } from './db'
 import SyncManager from './sync'
 import { loadLists } from './actions/index'
-import { ShoppingListFactory, ShoppingListRepositoryPouchDB } from 'ibm-shopping-list-model'
 
 const store = createStore(reducers, applyMiddleware(thunk));
 
@@ -29,19 +28,10 @@ export default class ShoppingListApp extends Component  {
   
   constructor(props) {
     super(props);
-    shoppingListDB.createIndex({
-      index: {
-        fields: ['type', 'list']
-      }
-    }).then((result) => {
-      // load all lists
-      store.dispatch(loadLists());
-      // create sync manager
-      this.syncManager = new SyncManager(store, settingsDB, shoppingListDB, this.onSyncComplete, this.onSyncError);
-    }).catch((err) => {
-      // TODO:
-      console.log(err);
-    });
+    // load all lists
+    store.dispatch(loadLists());
+    // create sync manager
+    this.syncManager = new SyncManager(store, settingsDB, shoppingListDB, this.onSyncComplete, this.onSyncError);
   }
 
   onSyncComplete(change) {
