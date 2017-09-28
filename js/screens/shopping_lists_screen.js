@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ShoppingLists from '../components/shopping_lists';
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import { connect } from 'react-redux';
 
 class ShoppingListsScreen extends Component {
@@ -9,7 +9,7 @@ class ShoppingListsScreen extends Component {
     title: "Shopping Lists",
     headerLeft: (
       <TouchableHighlight underlayColor='transparent' onPress={() => navigation.navigate('Settings')}>
-        <Text style={{ fontSize: 17, color: '#FFFFFF' }}>  Sync</Text>
+        <Image style={{width: 25, height: 25, margin: 10}} source={require('../../img/settings.png')} />
       </TouchableHighlight>
     ),
     headerRight: (
