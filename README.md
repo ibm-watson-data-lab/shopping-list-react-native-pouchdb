@@ -55,3 +55,6 @@ chmod +x node_modules/react-native/local-cli/*.sh
 chmod +x node_modules/react-native/scripts/*.sh
 chmod +x node_modules/react-native/scripts/*.command
 ```
+
+# License
+[Apache 2.0](LICENSE)
